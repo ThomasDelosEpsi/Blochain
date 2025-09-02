@@ -14,6 +14,7 @@ module.exports = [
     },
     rules: {
       // ajoute tes règles ici si besoin
+      //aat
     }
   }
 ];
