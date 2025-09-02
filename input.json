@@ -1,0 +1,13 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "Bonjour.sol": { "content": "$(cat Bonjour.sol)" }
+  },
+  "settings": {
+    "outputSelection": {
+      "*": {
+        "*": ["abi", "metadata", "evm.bytecode"]
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.627" tests="3" failures="1">
+  <testsuite name="Root Suite" timestamp="2025-09-02T09:25:44" tests="0" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="MyLab3SContract" timestamp="2025-09-02T09:25:44" tests="3" file="C:\Users\delos\Documents\IESI\1er_Annee\autoTest\Blockchain\Test\MyLab3SContract.test.js" time="0.625" failures="1">
+    <testcase name="&quot;before each&quot; hook for &quot;se déploie avec une adresse&quot;" time="0.624" classname="&quot;before each&quot; hook for &quot;se déploie avec une adresse&quot;">
+      <failure message="VM Exception while processing transaction: invalid opcode" type="c"><![CDATA[c: VM Exception while processing transaction: invalid opcode
+    at Function.c.fromResults (node_modules\ganache-cli\build\ganache-core.node.cli.js:4:192416)
+    at w.processBlock (node_modules\ganache-cli\build\ganache-core.node.cli.js:42:50915)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
