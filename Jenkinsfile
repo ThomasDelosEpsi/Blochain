@@ -4,7 +4,7 @@ pipeline {
   }
 
   options {
-    skipDefaultCheckout(true)        // on gère le checkout nous-mêmes
+    skipDefaultCheckout(true)
     timestamps()
     timeout(time: 10, unit: 'MINUTES')
   }
@@ -22,27 +22,32 @@ pipeline {
     }
 
     stage('Install') {
-      steps {
-        sh 'npm ci || npm install'
-      }
+      steps { sh 'npm ci || npm install' }
+    }
+
+    stage('Lint') {
+      steps { sh 'npm run lint' } // échoue si warnings (max-warnings=0)
     }
 
     stage('Compile') {
-      steps {
-        sh 'node compile.js'
-      }
+      steps { sh 'node compile.js' }
     }
 
-    stage('Test (Mocha → JUnit)') {
-      steps {
-        sh 'npm run ci-test'
-      }
+    stage('Test + Coverage') {
+      steps { sh 'npm run ci-coverage' }
       post {
         always {
           junit 'test-results/results.xml'
-          archiveArtifacts artifacts: 'test-results/*.xml, build/*.abi, build/*.bin', fingerprint: true
+          publishCoverage adapters: [coberturaAdapter('coverage/cobertura-coverage.xml')],
+                          sourceFileResolver: sourceFiles('STORE_LAST_BUILD'),
+                          failNoReports: false
+          archiveArtifacts artifacts: 'coverage/**, test-results/*.xml, build/*.abi, build/*.bin, audit.json', fingerprint: true
         }
       }
+    }
+
+    stage('Audit npm (non bloquant)') {
+      steps { sh 'npm run audit:ci' }
     }
   }
 }

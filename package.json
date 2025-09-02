@@ -4,10 +4,14 @@
   "description": "se projet vas utilisé la blockchain etherum",
   "author": "Thomas Delos",
   "license": "ISC",
+  
 "scripts": {
     "compile": "node compile.js",
     "test": "node ./node_modules/mocha/bin/mocha.js \"Test/**/*.js\"",
-    "ci-test": "mkdir -p test-results && node ./node_modules/mocha/bin/mocha.js \"Test/**/*.js\" --reporter mocha-junit-reporter --reporter-options mochaFile=test-results/results.xml,testsuitesTitle=\"Mocha Tests\""
+    "ci-test": "mkdir -p test-results && node ./node_modules/mocha/bin/mocha.js \"Test/**/*.js\" --reporter mocha-junit-reporter --reporter-options mochaFile=test-results/results.xml,testsuitesTitle=\"Mocha Tests\"",
+    "lint": "eslint . --ext .js --max-warnings=0",
+    "ci-coverage": "mkdir -p test-results && nyc --reporter=cobertura node ./node_modules/mocha/bin/mocha.js \"Test/**/*.js\" --reporter mocha-junit-reporter --reporter-options mochaFile=test-results/results.xml,testsuitesTitle=\"Mocha Tests\"",
+    "audit:ci": "npm audit --audit-level=high --json > audit.json || true"
   },
   "dependencies": {
     "ganache": "^7.9.0",
@@ -16,6 +20,8 @@
     "web3": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^9.0.0",
+    "nyc": "^15.1.0",
     "mocha-junit-reporter": "^2.2.0"
   }
 }
