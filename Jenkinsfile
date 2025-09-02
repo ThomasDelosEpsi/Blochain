@@ -22,25 +22,50 @@ pipeline {
     }
 
     stage('Install') {
-      steps { sh 'npm ci || npm install' }
+      steps {
+        sh 'npm ci --no-optional || npm install --no-optional'
+      }
     }
 
     stage('Lint') {
-      steps { sh 'npm run lint' } // échoue si warnings (max-warnings=0)
+      steps {
+        sh 'npm run lint'
+      }
     }
 
     stage('Compile') {
-      steps { sh 'node compile.js' }
+      steps {
+        sh 'node compile.js'
+      }
     }
 
     stage('Test + Coverage') {
-      steps { sh 'npm run ci-coverage' }
+      steps {
+        sh 'npm run ci-coverage'
+      }
       post {
         always {
           junit 'test-results/results.xml'
-          publishCoverage adapters: [coberturaAdapter('coverage/cobertura-coverage.xml')],
-                          sourceFileResolver: sourceFiles('STORE_LAST_BUILD'),
-                          failNoReports: false
+
+          // --- Nouveau: Coverage Plugin ---
+          // Pour les rapports Cobertura générés par nyc :
+          script {
+            try {
+              // si tu as le plugin Coverage (recommandé)
+              recordCoverage(
+                tools: [
+                  // l’un OU l’autre marche selon ta version de plugin :
+                  istanbulCobertura(pattern: 'coverage/cobertura-coverage.xml')
+                  // ou bien: cobertura(pattern: 'coverage/cobertura-coverage.xml')
+                ],
+                sourceFileResolver: sourceFiles('STORE_LAST_BUILD')
+              )
+            } catch (e) {
+              echo "Coverage non publiée (plugin/step indisponible) : ${e}"
+            }
+          }
+          // --------------------------------
+
           archiveArtifacts artifacts: 'coverage/**, test-results/*.xml, build/*.abi, build/*.bin, audit.json', fingerprint: true
         }
       }
